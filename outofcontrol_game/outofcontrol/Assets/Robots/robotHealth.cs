@@ -15,4 +15,10 @@ public class robotHealth : MonoBehaviour
     {
         
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+       
+        if (collision.gameObject.name == "Stick" && GameObject.Find("Player").GetComponent<playerController>().playerAttacking) Debug.Log("ouchies");
+    }
 }

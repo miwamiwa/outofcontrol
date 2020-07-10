@@ -19,9 +19,9 @@ public class playerController : MonoBehaviour
     float swingSpeed = 10f;
     Vector3 stickAttackPos = new Vector3(0.3f, -0.4f, 0f);
 
-    bool playerAttacking = false;
+    public bool playerAttacking = false;
     int attackCounter = 0;
-    int attackLength = 10; // frames
+    int attackLength = 9; // frames
     // Start is called before the first frame update
     void Start()
     {
