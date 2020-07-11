@@ -19,13 +19,15 @@ public class playerController : MonoBehaviour
     float swingSpeed = 10f;
     Vector3 stickAttackPos = new Vector3(0.3f, -0.4f, 0f);
 
+    Rigidbody rigidbody;
+
     public bool playerAttacking = false;
     int attackCounter = 0;
     int attackLength = 9; // frames
     // Start is called before the first frame update
     void Start()
     {
-        
+        rigidbody = gameObject.GetComponent<Rigidbody>();
     }
 
     private void Update()
@@ -118,6 +120,11 @@ public class playerController : MonoBehaviour
                 0f, 
                - playerVelocity * Mathf.Sin(playerRotation * Mathf.Deg2Rad)
                 ), Space.World);
+        }
+        else
+        {
+            rigidbody.velocity = Vector3.zero;
+            rigidbody.angularVelocity = Vector3.zero;
         }
           
     }

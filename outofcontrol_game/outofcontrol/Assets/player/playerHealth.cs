@@ -5,7 +5,7 @@ using UnityEngine;
 public class playerHealth : MonoBehaviour
 {
 
-    float hitPoints = 100f;
+    public float hitPoints = 100f;
     float bigRobotDamagePerFrame = 0.1f;
     // Start is called before the first frame update
     void Start()

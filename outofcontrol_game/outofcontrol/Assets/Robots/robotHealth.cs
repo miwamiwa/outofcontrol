@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class robotHealth : MonoBehaviour
 {
-    float hitPoints = 100f;
+    public float hitPoints = 100f;
     // Start is called before the first frame update
     void Start()
     {
@@ -16,17 +16,27 @@ public class robotHealth : MonoBehaviour
     {
         if (hitPoints <= 0)
         {
+            // if health is 0 this big guy is dead 
             Destroy(gameObject);
-            // robot is dead
+
+
+            // minions are now friendly 
+            if (gameObject.GetComponent<bigRobotController>() != null)
+            {
+                GameObject[] minions = gameObject.GetComponent<bigRobotController>().minions;
+                for (int i = 0; i < minions.Length; i++)
+                {
+                    // if this minion isn't already destroyed
+                    if (minions[i] != null)
+                    {
+                        minions[i].GetComponent<smallRobotController>().friendly = true;
+                    }
+                }
+            }
+            
+            
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-       // if hit by player's stick while player is attacking 
-        if (collision.gameObject.name == "Stick" && GameObject.Find("Player").GetComponent<playerController>().playerAttacking)
-        {
-            hitPoints -= 10f;
-        }
-    }
+    
 }

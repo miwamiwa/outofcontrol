@@ -25,7 +25,7 @@ public class bigRobotController : MonoBehaviour
     float aggroRadius = 4f;
 
     int minionCount = 3; // how many small robots spawn on start 
-    GameObject[] minions = new GameObject[3];
+    public GameObject[] minions = new GameObject[3];
 
     // Start is called before the first frame update
     void Start()
@@ -33,7 +33,7 @@ public class bigRobotController : MonoBehaviour
         // pointer for player
         player = GameObject.Find("Player");
 
-        // instantiate minions and create pointer
+        // instantiate minions 
         for(int i=0; i<minionCount; i++)
         {
             minions[i]= Instantiate(smallRobot, transform.position + new Vector3(Random.Range(-2f, 2f), 0, Random.Range(-2f, 2f)), Quaternion.identity);
@@ -110,5 +110,10 @@ public class bigRobotController : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "Tree") Destroy(collision.gameObject);
+        if (collision.gameObject.name == "Stick" && GameObject.Find("Player").GetComponent<playerController>().playerAttacking)
+        {
+            gameObject.GetComponent<robotHealth>().hitPoints -= 10f;
+        }
     }
+
 }
