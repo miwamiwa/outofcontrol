@@ -21,13 +21,18 @@ public class playerController : MonoBehaviour
     float distanceToTreeThreshold = 2.2f;
 
     public float oxygen = 100f;
-    float airLossRate = 0.5f;
+
+
+    float airLossRate = 0.9f;
 
     float pickupRange = 1f;
+    float setSpawnPointRange = 3f;
     bool itemPickedUp = false;
     Vector3 stickAttackPos = new Vector3(0.3f, -0.4f, 0f);
 
     Rigidbody rigidbody;
+
+    public bool pendingSpawn = true;
 
     public bool playerAttacking = false;
     int attackCounter = 0;
@@ -48,21 +53,62 @@ public class playerController : MonoBehaviour
     void FixedUpdate()
     {
         //Debug.Log("update");
+        handleSpawning();
         updateMovement();
         updateStick();
         updateOxygen();
     }
 
+    void handleSpawning()
+    {
+        if (pendingSpawn)
+        {
+            GameObject[] checkpoints = GameObject.FindGameObjectsWithTag("Checkpoint");
+            for(int i=0; i<checkpoints.Length; i++)
+            {
+                if (checkpoints[i].GetComponent<checkpointHandler>().isSpawnPoint)
+                {
+                    Vector3 pos = checkpoints[i].transform.position;
+                    transform.position = new Vector3(pos.x, transform.position.y, pos.z);
+                    pendingSpawn = false;
+                }
+            }
+        }
+    }
+
     void updateOxygen()
     {
-        bool playerSafe = false;
+        
+        bool playerSafe = false; //  = can breathe
+
+        // if near trees, we can breathe
         GameObject[] trees = GameObject.FindGameObjectsWithTag("Tree");
-        for(int i=0; i<trees.Length; i++)
+        for (int i = 0; i < trees.Length; i++)
         {
             Vector3 distance = trees[i].transform.position - transform.position;
-            if(distance.magnitude< distanceToTreeThreshold)
+            if (distance.magnitude < distanceToTreeThreshold)
             {
                 playerSafe = true;
+            }
+        }
+
+
+        // if near checkpoint, we can also breathe
+        GameObject[] checkpoints = GameObject.FindGameObjectsWithTag("Checkpoint");
+        for (int i = 0; i < checkpoints.Length; i++)
+        {
+            Vector3 distance = checkpoints[i].transform.position - transform.position;
+            if (distance.magnitude < distanceToTreeThreshold)
+            {
+                playerSafe = true;
+
+                // also, if base not conquered, conquer it 
+
+                if (!checkpoints[i].GetComponent<checkpointHandler>().isCaptured) {
+                    checkpoints[i].GetComponent<checkpointHandler>().isCaptured = true;
+
+                    checkpoints[i].GetComponent<Renderer>().material = checkpoints[i].GetComponent<checkpointHandler>().conqueredColor;
+                }
             }
         }
 
@@ -129,7 +175,38 @@ public class playerController : MonoBehaviour
             }
 
             itemPickedUp = !itemPickedUp;
-            
+
+            if (!itemPickedUp)
+            {
+                int newSpawn = -1;
+                GameObject[] checkpoints = GameObject.FindGameObjectsWithTag("Checkpoint");
+                for(int i=0; i<checkpoints.Length; i++)
+                {
+                    Vector3 distance = checkpoints[i].transform.position - transform.position;
+                    if (distance.magnitude < setSpawnPointRange)
+                    {
+                        checkpoints[i].GetComponent<checkpointHandler>().isSpawnPoint = true;
+                        checkpoints[i].GetComponent<Renderer>().material = checkpoints[i].GetComponent<checkpointHandler>().spawnerColor;
+                        newSpawn = i;
+                    }
+                }
+
+                if (newSpawn >= 0)
+                {
+                    for (int i = 0; i < checkpoints.Length; i++)
+                    {
+                        //Vector3 distance = checkpoints[i].transform.position - transform.position;
+                        if (i!=newSpawn)
+                        {
+                            checkpoints[i].GetComponent<checkpointHandler>().isSpawnPoint = false;
+
+                            if(checkpoints[i].GetComponent<checkpointHandler>().isCaptured)
+                                checkpoints[i].GetComponent<Renderer>().material = checkpoints[i].GetComponent<checkpointHandler>().conqueredColor;
+                            else checkpoints[i].GetComponent<Renderer>().material = checkpoints[i].GetComponent<checkpointHandler>().defaultColor;
+                        }
+                    }
+                }
+            }
             
         }
     }

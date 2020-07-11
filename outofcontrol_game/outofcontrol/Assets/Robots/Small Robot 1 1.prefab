@@ -29,7 +29,7 @@ GameObject:
   - component: {fileID: 7690203707259366756}
   - component: {fileID: 7690203707259366757}
   - component: {fileID: 2051981473998591061}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Small Robot 1 1
   m_TagString: SmallRobot
   m_Icon: {fileID: 0}
@@ -228,7 +228,7 @@ PrefabInstance:
     - target: {fileID: 4185768475020951464, guid: 8571a865ae591444d901899cd7806393,
         type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 5301280258508620703, guid: 8571a865ae591444d901899cd7806393,
         type: 3}
@@ -238,12 +238,12 @@ PrefabInstance:
     - target: {fileID: 5301280258508620703, guid: 8571a865ae591444d901899cd7806393,
         type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 6488357023497197811, guid: 8571a865ae591444d901899cd7806393,
         type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 11
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8571a865ae591444d901899cd7806393, type: 3}

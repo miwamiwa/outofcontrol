@@ -25,6 +25,9 @@ public class playerHealth : MonoBehaviour
         if (hitPoints <= 0)
         {
             Debug.Log("player dead!");
+            GetComponent<playerController>().pendingSpawn = true;
+            hitPoints = 100;
+
         }
     }
 

@@ -311,6 +311,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 7356316701185229316, guid: 3dd03b55fbdd13b478913763ef95d383,
         type: 3}
+    - target: {fileID: 6115129095606731549, guid: e831eeedc04727b47a68678e348f56cf,
+        type: 3}
+      propertyPath: checkpoint
+      value: 
+      objectReference: {fileID: 1277246342274413895, guid: 14389f8534bb690419dfd6f5b3e04bcb,
+        type: 3}
     - target: {fileID: 6115129095606731552, guid: e831eeedc04727b47a68678e348f56cf,
         type: 3}
       propertyPath: m_Name
@@ -715,6 +721,7 @@ MonoBehaviour:
   stick: {fileID: 953326537}
   playerVelocity: 0.04
   oxygen: 100
+  pendingSpawn: 1
   playerAttacking: 0
 --- !u!65 &1697252168
 BoxCollider:

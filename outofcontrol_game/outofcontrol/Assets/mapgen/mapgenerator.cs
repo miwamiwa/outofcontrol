@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class mapgenerator : MonoBehaviour
 {
+
+    int checkpointCount = 5;
+
+
+    public GameObject checkpoint;
     public GameObject testcube;
 
     int gridDefinition = 20;
@@ -225,9 +230,41 @@ public class mapgenerator : MonoBehaviour
 
                 treeCounter = -1;
             }
+
+
+        // now that the trees are placed, setup the checkpoints 
+
+        List<int> pickedPoints = new List<int>();
+
+        for(int i=0; i<checkpointCount; i++)
+        {
+
+            // pick a random node that hasn't been chosen yet 
+            int pick = Random.Range(0, nodeCount);
+
+            while (pickedPoints.Contains(pick))
+            {
+                pick = Random.Range(0, nodeCount);
+            }
+
+            pickedPoints.Add(pick);
+            Debug.Log(pick);
+            Vector3 pos = new Vector3(
+                rend.bounds.center.x+rend.bounds.extents.x * (2 * blobs[pick][0][0] / gridDefinition)-5f,
+               0.89f,
+                 rend.bounds.center.z + rend.bounds.extents.x * (2 * blobs[pick][0][1] / gridDefinition)-5f);
+            GameObject newcheckpoint = Instantiate(checkpoint, pos, Quaternion.identity);
+
+            if (i == 0)
+            {
+                newcheckpoint.GetComponent<checkpointHandler>().isCaptured = true;
+                newcheckpoint.GetComponent<checkpointHandler>().isSpawnPoint = true;
+                newcheckpoint.GetComponent<Renderer>().material = newcheckpoint.GetComponent<checkpointHandler>().spawnerColor;
+            }
+         }
+
         
-
-
+        
     }
 
     bool checkCandidate(int x, int y, int blob)
