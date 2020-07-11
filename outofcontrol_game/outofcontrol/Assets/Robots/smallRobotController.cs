@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class camControls : MonoBehaviour
+public class smallRobotController : MonoBehaviour
 {
-    public GameObject target;
+    public GameObject parentRobot;
     // Start is called before the first frame update
     void Start()
     {
@@ -14,6 +14,6 @@ public class camControls : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        gameObject.transform.position = target.transform.position + new Vector3(-3f, 10f, 0);
+        
     }
 }

@@ -16,7 +16,7 @@ public class playerHealth : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (hitPoints <= 0) Debug.Log("dead!");
     }
 
     private void OnCollisionStay(Collision collision)
