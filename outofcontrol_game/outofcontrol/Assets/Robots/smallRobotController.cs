@@ -37,6 +37,9 @@ public class smallRobotController : MonoBehaviour
     int minionCount = 3; // how many small robots spawn on start 
     GameObject[] minions = new GameObject[3];
 
+
+    float noTreeRange = 1.5f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -102,15 +105,28 @@ public class smallRobotController : MonoBehaviour
         {
             if (fCounter == 0)
             {
+                // make health bar green 
                 healthBarObj.GetComponent<Renderer>().material = friendlyHealthBarMat;
             }
             fCounter++;
 
+            // spawn trees 
             if (fCounter % plantingInterval == 0)
             {
-                Vector2 offset = 2f*Random.insideUnitCircle;
-                Vector3 newPos =  new Vector3(offset.x+ transform.position.x, 1.92f, offset.y+ transform.position.z);
-                Instantiate(treeObject, newPos, Quaternion.identity);
+                GameObject[] trees = GameObject.FindGameObjectsWithTag("Tree");
+                bool nevermind = false;
+                for(int i=0; i<trees.Length; i++)
+                {
+                    Vector3 distance = trees[i].transform.position - transform.position;
+                    if (distance.magnitude < noTreeRange) nevermind = true;
+                }
+                if (!nevermind)
+                {
+                    Vector2 offset = 2f * Random.insideUnitCircle;
+                    Vector3 newPos = new Vector3(offset.x + transform.position.x, 1.92f, offset.y + transform.position.z);
+                    Instantiate(treeObject, newPos, Quaternion.identity);
+                }
+                
             }
         }
         
