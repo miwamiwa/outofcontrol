@@ -5,11 +5,18 @@ using UnityEngine;
 public class smallRobotController : MonoBehaviour
 {
     public GameObject parentRobot;
-
+    public GameObject treeObject;
     GameObject player;
 
 
-    string currentState = "idle";
+    int plantingInterval = 200;
+    public Material friendlyHealthBarMat;
+    public GameObject healthBarObj;
+
+    public float maxStrayDistance = 7f;
+
+    public string currentState = "idle";
+
     Vector3 currentTarget;
     Vector3 fightTarget;
 
@@ -26,7 +33,7 @@ public class smallRobotController : MonoBehaviour
 
     float targetReachedMargin = 0.1f;
     float aggroRadius = 4f;
-
+    int fCounter = 0;
     int minionCount = 3; // how many small robots spawn on start 
     GameObject[] minions = new GameObject[3];
 
@@ -41,8 +48,7 @@ public class smallRobotController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (!friendly)
-        {
+        
             if (currentState == "idle")
             {
                 pickTarget();
@@ -62,7 +68,7 @@ public class smallRobotController : MonoBehaviour
 
                 Vector3 distToPlayer = transform.position - player.transform.position;
 
-                if (distToPlayer.magnitude < aggroRadius)
+                if (distToPlayer.magnitude < aggroRadius && !friendly)
                 // if player is in range move towards player 
                 {
                     if (attackCounter > nextAttack)
@@ -90,13 +96,29 @@ public class smallRobotController : MonoBehaviour
 
                 attackCounter++;
             }
+
+        if (friendly)
+        // if robot is friendly
+        {
+            if (fCounter == 0)
+            {
+                healthBarObj.GetComponent<Renderer>().material = friendlyHealthBarMat;
+            }
+            fCounter++;
+
+            if (fCounter % plantingInterval == 0)
+            {
+                Vector2 offset = 2f*Random.insideUnitCircle;
+                Vector3 newPos =  new Vector3(offset.x+ transform.position.x, 1.92f, offset.y+ transform.position.z);
+                Instantiate(treeObject, newPos, Quaternion.identity);
+            }
         }
         
     }
 
     void pickTarget()
     {
-        float range = 12f;
+        float range = maxStrayDistance;
         Vector2 randompos = range*Random.insideUnitCircle;
 
         currentTarget = parentRobot.transform.position + new Vector3(randompos.x, 0f, randompos.y);
@@ -106,7 +128,7 @@ public class smallRobotController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Tree") Destroy(collision.gameObject);
+        if (collision.gameObject.tag == "Tree"&&!friendly) Destroy(collision.gameObject);
         if (collision.gameObject.name == "Stick" && GameObject.Find("Player").GetComponent<playerController>().playerAttacking)
         {
             gameObject.GetComponent<robotHealth>().hitPoints -= 40f;

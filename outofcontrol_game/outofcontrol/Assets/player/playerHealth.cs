@@ -16,7 +16,16 @@ public class playerHealth : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (hitPoints <= 0) Debug.Log("dead!");
+      
+
+        if (GetComponent<playerController>().oxygen <= 0) hitPoints--;
+
+        hitPoints = Mathf.Clamp(hitPoints, 0f, 100f);
+
+        if (hitPoints <= 0)
+        {
+            Debug.Log("player dead!");
+        }
     }
 
     private void OnCollisionStay(Collision collision)

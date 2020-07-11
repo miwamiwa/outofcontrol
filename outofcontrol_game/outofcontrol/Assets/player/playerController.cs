@@ -17,6 +17,14 @@ public class playerController : MonoBehaviour
     float stickAttackAngle = 90f;
     float initialSwingAngle = 30f;
     float swingSpeed = 10f;
+
+    float distanceToTreeThreshold = 2.2f;
+
+    public float oxygen = 100f;
+    float airLossRate = 0.5f;
+
+    float pickupRange = 1f;
+    bool itemPickedUp = false;
     Vector3 stickAttackPos = new Vector3(0.3f, -0.4f, 0f);
 
     Rigidbody rigidbody;
@@ -34,6 +42,7 @@ public class playerController : MonoBehaviour
     {
         checkMotionInput();
         checkStickInput();
+        checkPickup();
     }
     // Update is called once per frame
     void FixedUpdate()
@@ -41,6 +50,30 @@ public class playerController : MonoBehaviour
         //Debug.Log("update");
         updateMovement();
         updateStick();
+        updateOxygen();
+    }
+
+    void updateOxygen()
+    {
+        bool playerSafe = false;
+        GameObject[] trees = GameObject.FindGameObjectsWithTag("Tree");
+        for(int i=0; i<trees.Length; i++)
+        {
+            Vector3 distance = trees[i].transform.position - transform.position;
+            if(distance.magnitude< distanceToTreeThreshold)
+            {
+                playerSafe = true;
+            }
+        }
+
+        if (!playerSafe)
+        {
+            oxygen= Mathf.Clamp(oxygen-airLossRate,0f,100f);
+        }
+        else if (oxygen < 100)
+        {
+            oxygen = Mathf.Clamp(oxygen + 2, 0f, 100f);
+        }
     }
 
     void checkMotionInput()
@@ -63,6 +96,41 @@ public class playerController : MonoBehaviour
             attackCounter = 0;
             stick.transform.Translate(stickAttackPos);
             stick.transform.localEulerAngles = new Vector3(0f, initialSwingAngle, stickAttackAngle);
+        }
+    }
+
+    void checkPickup()
+    {
+        GameObject[] beacons = GameObject.FindGameObjectsWithTag("Beacon");
+
+        if (Input.GetKeyDown("space"))
+        {
+
+            if (!itemPickedUp)
+            {
+                for (int i = 0; i < beacons.Length; i++)
+                {
+                    Vector3 distance = beacons[i].transform.position - transform.position;
+                    if (distance.magnitude < pickupRange)
+                    {
+                        beacons[i].transform.SetParent(transform);
+                    }
+                }
+
+            }
+            else
+            {
+                for (int i = 0; i < beacons.Length; i++)
+                {
+                   
+                        beacons[i].transform.SetParent(null);
+                    
+                }
+            }
+
+            itemPickedUp = !itemPickedUp;
+            
+            
         }
     }
 

@@ -179,7 +179,7 @@ public class mapgenerator : MonoBehaviour
                                 testcube,
                                 rend.bounds.center + new Vector3(
                                     1+randomOffset.x + 0.9f*rend.bounds.extents.x * (2f * candidates[pick][0] / gridDefinition - 1f),
-                                    0.5f,
+                                    2.0f,
                                     1+randomOffset.y + 0.9f * rend.bounds.extents.z * (2f * candidates[pick][1] / gridDefinition - 1f)),
                                 Quaternion.identity
                                 );
@@ -194,7 +194,6 @@ public class mapgenerator : MonoBehaviour
 
 
 
-        treeCounter++;
 
             if (treeCounter >= maxTreeCount)
             {
