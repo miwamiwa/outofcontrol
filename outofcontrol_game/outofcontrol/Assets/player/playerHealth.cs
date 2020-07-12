@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class playerHealth : MonoBehaviour
 {
@@ -8,10 +9,13 @@ public class playerHealth : MonoBehaviour
     public float hitPoints = 100f;
     float bigRobotDamagePerFrame = 0.4f;
     float smallRobotDamagePerFrame = 0.2f;
+    public UnityEngine.UI.Text counter;
+
+    int lives = 5;
     // Start is called before the first frame update
     void Start()
     {
-        
+        counter.text = lives.ToString();
     }
 
     // Update is called once per frame
@@ -25,10 +29,18 @@ public class playerHealth : MonoBehaviour
 
         if (hitPoints <= 0)
         {
-            Debug.Log("player dead!");
+            //Debug.Log("player dead!");
             GetComponent<playerController>().pendingSpawn = true;
             hitPoints = 100;
+            lives--;
 
+            counter.text = lives.ToString();
+            if (lives == 0)
+            {
+                // game is over, player fully ded 
+                Debug.Log("ded!!");
+                Application.LoadLevel(3);
+            }
         }
     }
 

@@ -104,6 +104,7 @@ public class playerController : MonoBehaviour
             }
         }
 
+        bool playerWon = true;
 
         // if near checkpoint, we can also breathe
         GameObject[] checkpoints = GameObject.FindGameObjectsWithTag("Checkpoint");
@@ -122,7 +123,15 @@ public class playerController : MonoBehaviour
                     checkpoints[i].GetComponent<Renderer>().material = checkpoints[i].GetComponent<checkpointHandler>().conqueredColor;
                 }
             }
+
+
+            // while we're here, check if game is over
+
+            if (!checkpoints[i].GetComponent<checkpointHandler>().isCaptured) playerWon = false;
+            
         }
+
+        if(playerWon) Application.LoadLevel(2); 
 
         if (!playerSafe)
         {
@@ -176,7 +185,7 @@ public class playerController : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) && !playerAttacking)
         {
-            Debug.Log("start swing");
+            //Debug.Log("start swing");
             playerAttacking = true;
             attackCounter = 0;
            // stick.transform.Translate(stickAttackPos);

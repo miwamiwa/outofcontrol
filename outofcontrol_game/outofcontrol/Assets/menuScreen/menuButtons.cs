@@ -28,4 +28,10 @@ public class menuButtons : MonoBehaviour
         Application.Quit();
         click.Play();
     }
+
+    public void MainMenu()
+    {
+        Application.LoadLevel(0);
+        click.Play();
+    }
 }

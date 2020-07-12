@@ -169,6 +169,7 @@ MonoBehaviour:
   hitPoints: 100
   beaconObject: {fileID: 5362289340813280199, guid: 310c64f59a9ae0e4aa4968ee5fc3eb35,
     type: 3}
+  deadCounter: 0
 --- !u!82 &-7432632013868244764
 AudioSource:
   m_ObjectHideFlags: 0
@@ -670,7 +671,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 500
+  MaxDistance: 14
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
