@@ -37,9 +37,16 @@ public class playerController : MonoBehaviour
     public bool playerAttacking = false;
     int attackCounter = 0;
     int attackLength = 9; // frames
+
+    bool lastMoving = false;
+    bool lastPlayerSafe = true;
+    float lastOxygen = 100f;
+
+    
     // Start is called before the first frame update
     void Start()
     {
+        
         rigidbody = gameObject.GetComponent<Rigidbody>();
     }
 
@@ -115,23 +122,50 @@ public class playerController : MonoBehaviour
         if (!playerSafe)
         {
             oxygen= Mathf.Clamp(oxygen-airLossRate,0f,100f);
+
+            if (lastPlayerSafe) GetComponent<playerSFX>().oxygenStart();
+            if (oxygen == 0 && lastOxygen != 0) GetComponent<playerSFX>().oxygenRanOut();
         }
         else if (oxygen < 100)
         {
+            if (!lastPlayerSafe) GetComponent<playerSFX>().stopOxygenSound();
             oxygen = Mathf.Clamp(oxygen + 2, 0f, 100f);
         }
+
+        lastPlayerSafe = playerSafe;
+        lastOxygen = oxygen;
     }
 
     void checkMotionInput()
     {
         angle1 = -1f;
         angle2 = -1f;
+        bool moving = false;
 
-        if (Input.GetKey(KeyCode.W)) angle1 = 0f;
-        else if (Input.GetKey(KeyCode.S)) angle1 = 180f;
+        if (Input.GetKey(KeyCode.W))
+        {
+            angle1 = 0f;
+            moving = true;
+        }
+        else if (Input.GetKey(KeyCode.S))
+        {
+            angle1 = 180f;
+            moving = true;
+        }
 
-        if (Input.GetKey(KeyCode.D)) angle2 = 90f;
-        else if (Input.GetKey(KeyCode.A)) angle2 = 270f;
+        if (Input.GetKey(KeyCode.D))
+        {
+            angle2 = 90f;
+            moving = true;
+        }
+        else if (Input.GetKey(KeyCode.A))
+        {
+            angle2 = 270f;
+            moving = true;
+        }
+
+        if (moving) GetComponent<playerSFX>().triggerFootSteps();
+        
     }
     void checkStickInput()
     {
@@ -142,6 +176,7 @@ public class playerController : MonoBehaviour
             attackCounter = 0;
             stick.transform.Translate(stickAttackPos);
             stick.transform.localEulerAngles = new Vector3(0f, initialSwingAngle, stickAttackAngle);
+            GetComponent<playerSFX>().swishStick();
         }
     }
 
@@ -160,12 +195,14 @@ public class playerController : MonoBehaviour
                     if (distance.magnitude < pickupRange)
                     {
                         beacons[i].transform.SetParent(transform);
+                        GetComponent<playerSFX>().pickupSFX();
                     }
                 }
 
             }
             else
             {
+                GetComponent<playerSFX>().pickupSFX();
                 for (int i = 0; i < beacons.Length; i++)
                 {
                    

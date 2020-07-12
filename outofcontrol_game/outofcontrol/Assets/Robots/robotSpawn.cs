@@ -14,10 +14,12 @@ public class robotSpawn : MonoBehaviour
 
     public GameObject bigrobot;
 
+    GameObject player;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        player = GameObject.Find("Player");
     }
 
     // Update is called once per frame
@@ -35,6 +37,16 @@ public class robotSpawn : MonoBehaviour
 
             Vector2 randompos = Random.insideUnitCircle * spawnRadius;
             Vector3 pos = new Vector3(randompos.x, 0.53f, randompos.y);
+
+            Vector3 distance = pos - player.transform.position;
+
+            while (distance.magnitude<6f || distance.magnitude > 10f)
+            {
+                randompos = Random.insideUnitCircle * spawnRadius;
+                pos = new Vector3(randompos.x, 0.53f, randompos.y);
+                distance = pos - player.transform.position;
+            }
+
             Instantiate(bigrobot, pos, Quaternion.identity);
 
             activeSpawns++;

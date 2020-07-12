@@ -6,7 +6,8 @@ public class playerHealth : MonoBehaviour
 {
 
     public float hitPoints = 100f;
-    float bigRobotDamagePerFrame = 0.1f;
+    float bigRobotDamagePerFrame = 0.4f;
+    float smallRobotDamagePerFrame = 0.2f;
     // Start is called before the first frame update
     void Start()
     {
@@ -37,6 +38,14 @@ public class playerHealth : MonoBehaviour
         if (collision.gameObject.tag == "BigRobot")
         {
             hitPoints -= bigRobotDamagePerFrame;
+            GetComponent<playerSFX>().triggerRobotCollision();
+            //Debug.Log(hitPoints);
+        }
+
+        if (collision.gameObject.tag == "SmallRobot")
+        {
+            hitPoints -= smallRobotDamagePerFrame;
+            GetComponent<playerSFX>().triggerRobotCollision();
             //Debug.Log(hitPoints);
         }
     }
