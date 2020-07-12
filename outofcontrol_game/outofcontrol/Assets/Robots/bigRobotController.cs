@@ -4,6 +4,14 @@ using UnityEngine;
 
 public class bigRobotController : MonoBehaviour
 {
+    AudioSource rattle;
+    AudioSource hitSound;
+    AudioSource dash;
+    AudioSource cutTree;
+    float rattleRange = 10f;
+
+
+
     GameObject player;
     public GameObject smallRobot;
 
@@ -29,7 +37,13 @@ public class bigRobotController : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
-    {   
+    {
+        AudioSource[] aSources = GetComponents<AudioSource>();
+        rattle = aSources[0];
+        hitSound = aSources[1];
+        dash = aSources[2];
+        cutTree = aSources[3];
+
         // pointer for player
         player = GameObject.Find("Player");
 
@@ -63,12 +77,15 @@ public class bigRobotController : MonoBehaviour
 
          
             Vector3 distToPlayer = transform.position - player.transform.position;
+            if (distToPlayer.magnitude < rattleRange && !rattle.isPlaying) rattle.UnPause();
+            else if (distToPlayer.magnitude >= rattleRange && rattle.isPlaying) rattle.Pause();
 
             if (distToPlayer.magnitude < aggroRadius)
                 // if player is in range move towards player 
             {
                 if (attackCounter > nextAttack)
                 {
+                    if (chargeCounter == 0) dash.Play();
                     transform.position = Vector3.MoveTowards(transform.position, player.transform.position, attackVelocity);
                     chargeCounter++;
                     if (chargeCounter > chargeLength)
@@ -109,10 +126,16 @@ public class bigRobotController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Tree") Destroy(collision.gameObject);
+        if (collision.gameObject.tag == "Tree")
+        {
+            Destroy(collision.gameObject);
+            cutTree.Play();
+        }
         if (collision.gameObject.name == "Stick" && GameObject.Find("Player").GetComponent<playerController>().playerAttacking)
         {
             gameObject.GetComponent<robotHealth>().hitPoints -= 10f;
+            
+            hitSound.Play();
         }
     }
 

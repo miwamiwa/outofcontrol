@@ -6,10 +6,13 @@ public class robotHealth : MonoBehaviour
 {
     public float hitPoints = 100f;
     public GameObject beaconObject;
+
+    AudioSource deadSFX;
     // Start is called before the first frame update
     void Start()
     {
-        
+        AudioSource[] aSources = GetComponents<AudioSource>();
+        deadSFX = aSources[4];
     }
 
     // Update is called once per frame
@@ -41,7 +44,7 @@ public class robotHealth : MonoBehaviour
                 }
             }
 
-
+            deadSFX.Play();
             // if health is 0 this big guy is dead 
             Destroy(gameObject);
 

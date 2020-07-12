@@ -78,6 +78,7 @@ public class playerController : MonoBehaviour
                     Vector3 pos = checkpoints[i].transform.position;
                     transform.position = new Vector3(pos.x, transform.position.y, pos.z);
                     pendingSpawn = false;
+                    GetComponent<playerSFX>().triggerSpawn();
                 }
             }
         }
@@ -113,7 +114,7 @@ public class playerController : MonoBehaviour
 
                 if (!checkpoints[i].GetComponent<checkpointHandler>().isCaptured) {
                     checkpoints[i].GetComponent<checkpointHandler>().isCaptured = true;
-
+                    GetComponent<playerSFX>().captureSFX();
                     checkpoints[i].GetComponent<Renderer>().material = checkpoints[i].GetComponent<checkpointHandler>().conqueredColor;
                 }
             }

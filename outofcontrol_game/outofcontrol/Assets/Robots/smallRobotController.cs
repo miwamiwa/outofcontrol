@@ -4,8 +4,15 @@ using UnityEngine;
 
 public class smallRobotController : MonoBehaviour
 {
+
+    AudioSource rattle;
+    AudioSource hitSound;
+
     public GameObject parentRobot;
     public GameObject treeObject;
+    AudioSource dash;
+    AudioSource cutTree;
+    AudioSource treePlantingSound;
     GameObject player;
 
 
@@ -37,6 +44,8 @@ public class smallRobotController : MonoBehaviour
     int minionCount = 3; // how many small robots spawn on start 
     GameObject[] minions = new GameObject[3];
 
+    float rattleRange = 10f;
+    
 
     float noTreeRange = 1.5f;
 
@@ -46,7 +55,14 @@ public class smallRobotController : MonoBehaviour
         // pointer for player
         player = GameObject.Find("Player");
 
-     }
+        AudioSource[] aSources = GetComponents<AudioSource>();
+        rattle = aSources[0];
+        hitSound = aSources[1];
+        dash = aSources[2];
+        cutTree = aSources[3];
+        treePlantingSound=aSources[5];
+
+    }
 
     // Update is called once per frame
     void FixedUpdate()
@@ -71,12 +87,18 @@ public class smallRobotController : MonoBehaviour
 
                 Vector3 distToPlayer = transform.position - player.transform.position;
 
+            // trigger rattle sound on/off 
+            if (distToPlayer.magnitude < rattleRange && !rattle.isPlaying) rattle.UnPause();
+            else if (distToPlayer.magnitude >= rattleRange && rattle.isPlaying) rattle.Pause();
+
+
                 if (distToPlayer.magnitude < aggroRadius && !friendly)
                 // if player is in range move towards player 
                 {
                     if (attackCounter > nextAttack)
                     {
-                        transform.position = Vector3.MoveTowards(transform.position, player.transform.position, attackVelocity);
+                    if (chargeCounter == 0) dash.Play();
+                    transform.position = Vector3.MoveTowards(transform.position, player.transform.position, attackVelocity);
                         chargeCounter++;
                         if (chargeCounter > chargeLength)
                         {
@@ -125,6 +147,7 @@ public class smallRobotController : MonoBehaviour
                     Vector2 offset = 2f * Random.insideUnitCircle;
                     Vector3 newPos = new Vector3(offset.x + transform.position.x, 1.92f, offset.y + transform.position.z);
                     Instantiate(treeObject, newPos, Quaternion.identity);
+                    treePlantingSound.Play();
                 }
                 
             }
@@ -144,10 +167,15 @@ public class smallRobotController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Tree"&&!friendly) Destroy(collision.gameObject);
+        if (collision.gameObject.tag == "Tree" && !friendly)
+        {
+            Destroy(collision.gameObject);
+            cutTree.Play();
+        }
         if (collision.gameObject.name == "Stick" && GameObject.Find("Player").GetComponent<playerController>().playerAttacking)
         {
             gameObject.GetComponent<robotHealth>().hitPoints -= 40f;
+            hitSound.Play();
         }
     }
 }

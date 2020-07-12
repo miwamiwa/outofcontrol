@@ -13,6 +13,8 @@ public class playerSFX : MonoBehaviour
     AudioSource oxygenStartSound;
     AudioSource oxygenOut;
     AudioSource pickup;
+    AudioSource spawn;
+    AudioSource capture;
 
     bool stepsActive = false;
     int stepCounter = 0;
@@ -35,6 +37,8 @@ public class playerSFX : MonoBehaviour
         oxygenStartSound = aSources[6];
         oxygenOut = aSources[7];
         pickup = aSources[8];
+        spawn = aSources[9];
+        capture = aSources[10];
     }
 
     // Update is called once per frame
@@ -135,5 +139,15 @@ public class playerSFX : MonoBehaviour
     {
         if (!pickup.isPlaying)
             pickup.Play();
+    }
+
+    public void triggerSpawn()
+    {
+        spawn.Play();
+    }
+
+    public void captureSFX()
+    {
+        capture.Play();
     }
 }
