@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class playerController : MonoBehaviour
 {
+
+    public Animator anim;
     public GameObject pivot;
     public GameObject stick;
     float lastPlayerRotation = 0f;
@@ -46,7 +48,7 @@ public class playerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        anim = GetComponent<Animator>();
         rigidbody = gameObject.GetComponent<Rigidbody>();
     }
 
@@ -175,8 +177,9 @@ public class playerController : MonoBehaviour
             Debug.Log("start swing");
             playerAttacking = true;
             attackCounter = 0;
-            stick.transform.Translate(stickAttackPos);
-            stick.transform.localEulerAngles = new Vector3(0f, initialSwingAngle, stickAttackAngle);
+           // stick.transform.Translate(stickAttackPos);
+            stick.transform.localEulerAngles = new Vector3(0f, initialSwingAngle, 0f);
+            anim.Play("swing");
             GetComponent<playerSFX>().swishStick();
         }
     }
@@ -264,9 +267,9 @@ public class playerController : MonoBehaviour
                 
                 stick.transform.localEulerAngles = new Vector3(0f, 0f, stickRestAngle);
                 //  stick.transform.Translate(-stickAttackPos);//(new Vector3(1f,0.4f,0.2f));
-                stick.transform.localPosition = new Vector3(0.83f, 0.87f, -0.22f);
+                stick.transform.localPosition = new Vector3(-2.83f, 0.87f, 0.62f);
             }
-            else stick.transform.RotateAround(pivot.transform.position, Vector3.up, -swingSpeed);
+            else stick.transform.RotateAround(pivot.transform.position, Vector3.up, 4f*swingSpeed);
         }
     }
 
@@ -289,7 +292,7 @@ public class playerController : MonoBehaviour
             playerRotation = (angle1 + angle2) / 2f;
         }
 
-        gameObject.transform.eulerAngles=new Vector3(0f, playerRotation, 0f);
+        gameObject.transform.eulerAngles=new Vector3(0f, 180f+playerRotation, 0f);
         lastPlayerRotation = playerRotation;
         
 

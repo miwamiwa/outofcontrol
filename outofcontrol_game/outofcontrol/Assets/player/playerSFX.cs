@@ -16,10 +16,12 @@ public class playerSFX : MonoBehaviour
     AudioSource spawn;
     AudioSource capture;
 
+
+    public Animator anim;
     bool stepsActive = false;
     int stepCounter = 0;
     int nextStep = 0;
-    int stepInterval = 12;
+    int stepInterval = 30;
     float basePitch = 2.75f;
     float lastRobotCollision = 0f;
     int oxygenFadeoutCounter = 200;
@@ -39,6 +41,8 @@ public class playerSFX : MonoBehaviour
         pickup = aSources[8];
         spawn = aSources[9];
         capture = aSources[10];
+
+        anim = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -48,10 +52,11 @@ public class playerSFX : MonoBehaviour
         {
             if (stepCounter == nextStep)
             {
-                footstep.pitch = basePitch + Random.Range(-0.2f, 0.2f);
+                footstep.pitch = basePitch ;
                 if (footstep.isPlaying)
                     footstep.Stop();
                 footstep.Play();
+                anim.Play("walk");
                 nextStep = stepCounter + stepInterval + Random.Range(-1, 2);
             }
             stepCounter++;
@@ -59,6 +64,7 @@ public class playerSFX : MonoBehaviour
             if (stepCounter == footStepStop)
             {
                 stepsActive = false;
+                anim.Play("still");
             }
         }
 
