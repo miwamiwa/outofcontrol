@@ -35,6 +35,7 @@ public class bigRobotController : MonoBehaviour
     int minionCount = 3; // how many small robots spawn on start 
     public GameObject[] minions = new GameObject[3];
 
+    //int deadcounter = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -126,17 +127,21 @@ public class bigRobotController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Tree")
+        if (GetComponent<robotHealth>().deadCounter == 0)
         {
-            Destroy(collision.gameObject);
-            cutTree.Play();
+            if (collision.gameObject.tag == "Tree")
+            {
+                Destroy(collision.gameObject);
+                cutTree.Play();
+            }
+            if (collision.gameObject.name == "Stick" && GameObject.Find("Player").GetComponent<playerController>().playerAttacking)
+            {
+                gameObject.GetComponent<robotHealth>().hitPoints -= 7f;
+
+                hitSound.Play();
+            }
         }
-        if (collision.gameObject.name == "Stick" && GameObject.Find("Player").GetComponent<playerController>().playerAttacking)
-        {
-            gameObject.GetComponent<robotHealth>().hitPoints -= 10f;
-            
-            hitSound.Play();
-        }
+        
     }
 
 }

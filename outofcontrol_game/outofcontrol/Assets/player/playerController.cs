@@ -27,7 +27,7 @@ public class playerController : MonoBehaviour
 
     float airLossRate = 0.9f;
 
-    float pickupRange = 1f;
+    float pickupRange = 2f;
     float setSpawnPointRange = 3f;
     bool itemPickedUp = false;
     Vector3 stickAttackPos = new Vector3(0.3f, -0.4f, 0f);
@@ -50,6 +50,8 @@ public class playerController : MonoBehaviour
     {
         anim = GetComponent<Animator>();
         rigidbody = gameObject.GetComponent<Rigidbody>();
+
+        anim.SetLayerWeight(1, 0f);
     }
 
     private void Update()
@@ -179,7 +181,8 @@ public class playerController : MonoBehaviour
             attackCounter = 0;
            // stick.transform.Translate(stickAttackPos);
             stick.transform.localEulerAngles = new Vector3(0f, initialSwingAngle, 0f);
-            anim.Play("swing");
+            //anim.Play("hit");
+            anim.SetLayerWeight(1, 1f);
             GetComponent<playerSFX>().swishStick();
         }
     }
@@ -195,7 +198,7 @@ public class playerController : MonoBehaviour
             {
                 for (int i = 0; i < beacons.Length; i++)
                 {
-                    Vector3 distance = beacons[i].transform.position - transform.position;
+                    Vector3 distance = beacons[i].transform.position - new Vector3(transform.position.x,0.5f, transform.position.z);
                     if (distance.magnitude < pickupRange)
                     {
                         beacons[i].transform.SetParent(transform);
@@ -264,7 +267,7 @@ public class playerController : MonoBehaviour
             if (attackCounter > attackLength)
             {
                 playerAttacking = false;
-                
+                anim.SetLayerWeight(1, 0f);
                 stick.transform.localEulerAngles = new Vector3(0f, 0f, stickRestAngle);
                 //  stick.transform.Translate(-stickAttackPos);//(new Vector3(1f,0.4f,0.2f));
                 stick.transform.localPosition = new Vector3(-2.83f, 0.87f, 0.62f);
@@ -313,5 +316,6 @@ public class playerController : MonoBehaviour
             rigidbody.angularVelocity = Vector3.zero;
         }
           
+       
     }
 }

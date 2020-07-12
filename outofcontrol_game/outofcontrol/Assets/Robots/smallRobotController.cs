@@ -167,15 +167,19 @@ public class smallRobotController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Tree" && !friendly)
+        if (GetComponent<robotHealth>().deadCounter == 0)
         {
-            Destroy(collision.gameObject);
-            cutTree.Play();
+            if (collision.gameObject.tag == "Tree" && !friendly)
+            {
+                Destroy(collision.gameObject);
+                cutTree.Play();
+            }
+            if (collision.gameObject.name == "Stick" && GameObject.Find("Player").GetComponent<playerController>().playerAttacking)
+            {
+                gameObject.GetComponent<robotHealth>().hitPoints -= 25f;
+                hitSound.Play();
+            }
         }
-        if (collision.gameObject.name == "Stick" && GameObject.Find("Player").GetComponent<playerController>().playerAttacking)
-        {
-            gameObject.GetComponent<robotHealth>().hitPoints -= 40f;
-            hitSound.Play();
-        }
+        
     }
 }

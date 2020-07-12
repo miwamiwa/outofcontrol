@@ -10,8 +10,8 @@ public class robotSpawn : MonoBehaviour
     float spawnInterval = 10f;
     int maxSpawns = 3;
     float nextSpawnTime = 0f;
-    float spawnRadius = 20f;
-
+    float spawnRadius = 10f;
+    Renderer rend;
     public GameObject bigrobot;
 
     GameObject player;
@@ -19,6 +19,11 @@ public class robotSpawn : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
+
+        
+        rend = GameObject.Find("Ground").GetComponent<Renderer>();
+        spawnRadius = rend.bounds.extents.x - 1f;
         player = GameObject.Find("Player");
     }
 
@@ -40,7 +45,7 @@ public class robotSpawn : MonoBehaviour
 
             Vector3 distance = pos - player.transform.position;
 
-            while (distance.magnitude<6f || distance.magnitude > 10f)
+            while (distance.magnitude<8f || distance.magnitude > 12f)
             {
                 randompos = Random.insideUnitCircle * spawnRadius;
                 pos = new Vector3(randompos.x, 0.53f, randompos.y);

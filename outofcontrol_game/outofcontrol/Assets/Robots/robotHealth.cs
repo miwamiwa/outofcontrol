@@ -8,6 +8,7 @@ public class robotHealth : MonoBehaviour
     public GameObject beaconObject;
 
     AudioSource deadSFX;
+    public int deadCounter = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -16,9 +17,9 @@ public class robotHealth : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        if (hitPoints <= 0)
+        if (hitPoints <= 0&&deadCounter==0)
         {
             
 
@@ -30,6 +31,7 @@ public class robotHealth : MonoBehaviour
                 GameObject newBeacon =Instantiate(beaconObject, transform.position, Quaternion.identity);
                 GameObject.Find("robotSpawner").GetComponent<robotSpawn>().activeSpawns--;
                 GameObject[] minions = gameObject.GetComponent<bigRobotController>().minions;
+                
                 for (int i = 0; i < minions.Length; i++)
                 {
                     // if this minion isn't already destroyed
@@ -43,12 +45,19 @@ public class robotHealth : MonoBehaviour
                     }
                 }
             }
-
-            deadSFX.Play();
+            deadCounter = 1;
+            
             // if health is 0 this big guy is dead 
-            Destroy(gameObject);
+            
 
 
+        }
+
+        if (deadCounter > 0)
+        {
+            if(deadCounter==1) deadSFX.Play();
+            if (deadCounter>60) Destroy(gameObject);
+            deadCounter++;
         }
     }
 

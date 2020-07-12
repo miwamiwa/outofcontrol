@@ -57,6 +57,7 @@ public class playerSFX : MonoBehaviour
                     footstep.Stop();
                 footstep.Play();
                 anim.Play("walk");
+                
                 nextStep = stepCounter + stepInterval + Random.Range(-1, 2);
             }
             stepCounter++;
